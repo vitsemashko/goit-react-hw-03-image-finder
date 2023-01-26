@@ -24,9 +24,7 @@ export class App extends Component {
       fetchImages(this.state.currentSearch, this.state.pageNr).then(data =>
         this.setState(prev => ({ images: [...prev.images, ...data] }))
       );
-    } else {
-      return prevState;
-    }
+    } 
   }
   handleSubmit = e => {
     e.preventDefault();

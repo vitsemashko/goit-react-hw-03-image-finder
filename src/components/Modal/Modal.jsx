@@ -1,5 +1,5 @@
 import css from './Modal.module.css';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 export const Modal = ({ src, alt, handleClose }) => (
   <div className={css.Overlay} onClick={handleClose}>
@@ -10,7 +10,7 @@ export const Modal = ({ src, alt, handleClose }) => (
 );
 
 Modal.propTypes = {
-  src: propTypes.string.isRequired,
-  alt: propTypes.string.isRequired,
-  handleClose: propTypes.func.isRequired,
+  src: PropTypes.string.isRequired,
+  alt: PropTypes.string.isRequired,
+  handleClose: PropTypes.func.isRequired,
 };

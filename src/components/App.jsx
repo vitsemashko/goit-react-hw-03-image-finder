@@ -3,9 +3,8 @@ import { Searchbar } from './Searchbar/Searchbar';
 import { fetchImages } from './api/fetchImages';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
-import { Loader } from './Loader/Loader';
 import { Modal } from './Modal/Modal';
-import React from 'react';
+import { Loader } from './Loader/Loader';
 
 export class App extends Component {
   state = {
@@ -53,7 +52,10 @@ export class App extends Component {
     });
   };
 
-  handleModalClose = () => {
+  handleModalClose = e => {
+    if (e.target.tagName === 'IMG') {
+      return;
+    }
     this.setState({
       modalOpen: false,
       modalImg: '',
@@ -61,9 +63,9 @@ export class App extends Component {
     });
   };
 
-  handleKeyDown = event => {
-    if (event.code === 'Escape') {
-      this.handleModalClose();
+  handleKeyDown = e => {
+    if (e.code === 'Escape') {
+      this.setState({ modalOpen: false });
     }
   };
 
@@ -81,20 +83,18 @@ export class App extends Component {
           paddingBottom: '24px',
         }}
       >
-        {this.state.isLoading ? (
-          <Loader />
-        ) : (
-          <React.Fragment>
-            <Searchbar onSubmit={this.handleSubmit} />
-            <ImageGallery
-              onImageClick={this.handleImageClick}
-              images={this.state.images}
-            />
-            {this.state.images.length > 0 ? (
-              <Button onClick={this.handleClickMore} />
-            ) : null}
-          </React.Fragment>
-        )}
+        {this.state.isLoading && <Loader />}
+        <>
+          <Searchbar onSubmit={this.handleSubmit} />
+          <ImageGallery
+            onImageClick={this.handleImageClick}
+            images={this.state.images}
+          />
+          {this.state.images.length > 0 ? (
+            <Button onClick={this.handleClickMore} />
+          ) : null}
+        </>
+
         {this.state.modalOpen ? (
           <Modal
             src={this.state.modalImg}

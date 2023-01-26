@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'; //PropTypes, з великої літери,
 import css from './ImageGalleryItem.module.css';
 
 export const ImageGalleryItem = ({ image, onclick }) => (

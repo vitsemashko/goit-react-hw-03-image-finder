@@ -1,5 +1,5 @@
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'; //PropTypes, з великої літери,
 import css from './ImageGallery.module.css';
 
 export const ImageGallery = ({ images, onImageClick }) => (

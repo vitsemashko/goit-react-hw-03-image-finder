@@ -1,5 +1,5 @@
 import css from './Modal.module.css';
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'; //PropTypes, з великої літери,
 
 export const Modal = ({ src, alt, handleClose }) => (
   <div className={css.Overlay} onClick={handleClose}>

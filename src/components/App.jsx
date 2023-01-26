@@ -16,32 +16,37 @@ export class App extends Component {
     modalImg: '',
     modalAlt: '',
   };
-
-  handleSubmit = async e => {
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      prevState.currentSearch !== this.state.currentSearch ||
+      prevState.pageNr !== this.state.pageNr
+    ) {
+      fetchImages(this.state.currentSearch, this.state.pageNr).then(data =>
+        this.setState(prev => ({ images: [...prev.images, ...data] }))
+      );
+    } else {
+      return prevState;
+    }
+  }
+  handleSubmit = e => {
     e.preventDefault();
     this.setState({ isLoading: true });
-    const inputForSearch = e.target.elements.inputForSearch;
+    const { inputForSearch } = e.target.elements;
     if (inputForSearch.value.trim() === '') {
       return;
     }
-    const response = await fetchImages(inputForSearch.value, 1);
     this.setState({
-      images: response,
+      images: [],
       isLoading: false,
       currentSearch: inputForSearch.value,
       pageNr: 1,
     });
   };
 
-  handleClickMore = async () => {
-    const response = await fetchImages(
-      this.state.currentSearch,
-      this.state.pageNr + 1
-    );
-    this.setState({
-      images: [...this.state.images, ...response],
-      pageNr: this.state.pageNr + 1,
-    });
+  handleClickMore = () => {
+    this.setState(prev => ({
+      pageNr: prev.pageNr + 1,
+    }));
   };
 
   handleImageClick = e => {
@@ -83,13 +88,14 @@ export class App extends Component {
           paddingBottom: '24px',
         }}
       >
-        {this.state.isLoading && <Loader />}
         <>
           <Searchbar onSubmit={this.handleSubmit} />
           <ImageGallery
             onImageClick={this.handleImageClick}
             images={this.state.images}
           />
+
+          {this.state.isLoading && <Loader />}
           {this.state.images.length > 0 ? (
             <Button onClick={this.handleClickMore} />
           ) : null}

@@ -10,6 +10,7 @@ export class App extends Component {
   state = {
     images: [],
     isLoading: false,
+    error: null,
     currentSearch: '',
     pageNr: 1,
     modalOpen: false,
@@ -21,24 +22,33 @@ export class App extends Component {
       prevState.currentSearch !== this.state.currentSearch ||
       prevState.pageNr !== this.state.pageNr
     ) {
-      fetchImages(this.state.currentSearch, this.state.pageNr).then(data =>
-        this.setState(prev => ({ images: [...prev.images, ...data] }))
-      );
-    } 
+      this.setState({ isLoading: true });
+      fetchImages(this.state.currentSearch, this.state.pageNr)
+        .then(data =>
+          this.setState(prev => ({ images: [...prev.images, ...data] }))
+        )
+        .catch(error => {
+          this.setState({ error: error.message });
+        })
+        .finally(() => {
+          this.setState({ isLoading: false });
+        });
+    }
   }
   handleSubmit = e => {
     e.preventDefault();
-    this.setState({ isLoading: true });
     const { inputForSearch } = e.target.elements;
     if (inputForSearch.value.trim() === '') {
       return;
     }
-    this.setState({
-      images: [],
-      isLoading: false,
-      currentSearch: inputForSearch.value,
-      pageNr: 1,
-    });
+    if (this.state.currentSearch !== inputForSearch.value) {
+      this.setState({
+        images: [],
+        isLoading: false,
+        currentSearch: inputForSearch.value,
+        pageNr: 1,
+      });
+    }
   };
 
   handleClickMore = () => {
@@ -92,7 +102,7 @@ export class App extends Component {
             onImageClick={this.handleImageClick}
             images={this.state.images}
           />
-
+          {this.state.error && <span>An error occurred. Please try again</span>}
           {this.state.isLoading && <Loader />}
           {this.state.images.length > 0 ? (
             <Button onClick={this.handleClickMore} />
